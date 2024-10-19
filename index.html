@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta http-equiv="CONTENT-TYPE" content="text/html; charset=UTF-8">
+  <meta charset="UTF-8"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encriptador De Texto</title>
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/responsive.css">
+</head>
+
+<body>
+  <div class="contenedor">
+  <header>
+    <img src="styles/img/logo.png" alt="logo alura" class="logo">
+  </header>
+    <main class="principal">
+      
+      <section class="seccion1">
+        <textarea class="text_area" cols="30" rows="10" placeholder="Ingrese el texto aquí."></textarea>
+        <div class="div_informacion">
+          <h6 class="informacion">Solo letras minusculas y sin acentos.</h6>
+        </div>
+        <div class="botones">
+          <button onclick="btnEncriptar()" class="btn_encriptar">Encriptar</button>
+          <button onclick="btnDesencriptar()" class="btn_desencriptar">Desencriptar</button>
+        </div>
+      </section>
+      
+      <section class="seccion2">
+        <div class="seccion2_contenedor">
+          <div class="contenedor_text_area_2">
+           <textarea class="text_area_2" cols="30" rows="10"></textarea>
+            <p id="mensaje1" class="parrafo1"> Ningun mensaje fue encontrado</p>
+            <p id="mensaje2" class="parrafo2">Ingrese el texto que desees encriptar o desencriptar</p>
+           <button onclick="copiarTexto()" class="btn_copiar">Copiar</button>
+          </div>
+        </div>
+      </section>
+      
+    </main>
+    <footer class="piedepagina">©2024 YeiDev98</footer>
+    </div>
+  <script src="script.js"></script>
+</body>
+
+
+</html>

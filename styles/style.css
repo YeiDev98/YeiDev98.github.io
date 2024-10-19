@@ -1,0 +1,169 @@
+*{
+  padding: 0;
+  margin: 0;
+}
+
+header{
+  margin: 0;
+}
+.logo{
+  width: 8%;
+}
+
+body {
+  width: 1440px;
+  height: 1024px;
+  max-width: 1440px;
+  background: F6F6FC;
+  padding: 5%;
+}
+
+.contenedor{
+  padding: 2%;
+  margin: auto;
+  width: 90%;
+  height: auto;
+  box-sizing: border-box;
+  background-color: #F3F5FC;
+  border-radius: 32px;
+}
+
+main{
+  display: flex;
+  margin: 0 auto;
+  width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}
+
+
+.seccion1{
+  padding-bottom: 2%;
+  width:70%;
+  height: auto;
+  box-sizing: border-box;
+}
+
+
+.text_area{
+  margin-left: 13%;
+  padding-top: 5%;
+  max-width: 100%;
+  height: 874px;
+  border: none;
+  background-color: #F3F5FC;
+}
+::placeholder{ color: #0A3871;}
+   .text_area:focus {
+     outline: none;
+   }
+
+.seccion2{
+  width: 30%;
+  height: auto;
+  position: relative;
+}
+
+.seccion2_contenedor{
+  width: 100%;
+  height: 100%;
+}
+
+.contenedor_text_area_2{
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.text_area_2{
+  background-image: url("img/muneco.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  box-sizing: border-box;
+  border-radius: 32px;
+  border: none;
+  padding: 10px;
+  padding-bottom: 40px;
+  color: black;
+  width: 100%;
+  height: 100%;
+}
+::placeholder{ color: #0A3871;}
+   .text_area_2:focus {
+     outline: none;
+   }
+
+
+
+.informacion{
+  margin-left: 13%;
+}
+  
+/*Seccion de botones*/
+.botones{
+  display: flex;
+  gap: 5%;
+  margin-left: 10%;
+}
+  
+.btn_encriptar{
+  border-radius: 15px;
+  padding: 2%;
+  width: 42.5%;
+  background-color: #0A3871;
+  color: white;
+}
+
+.btn_desencriptar{
+  border-radius: 15px;
+  padding: 2%;
+  width: 42.5%;
+  background-color: #F3F5FC;
+  color: darkblue;
+}
+
+
+.btn_copiar{
+  width: 80%;
+  border-radius: 15px;
+  padding: 4.16%;
+  position: absolute;
+  bottom: 2.48%;
+  left: 10%;
+  transform: translateX(-50);
+  border-color: #0A3871;
+}
+
+.parrafo1{
+  position: absolute;
+  width: 80%;
+  bottom: 25%;
+  left: 10%;
+  text-align: center;
+  font-size: 2.2em;
+  font-weight: bold;
+}
+.parrafo2{
+  position: absolute;
+  width: 80%;
+  bottom: 20%;
+  left: 10%;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.hidden{
+  display: none;
+}
+/* Pie de pagina */
+
+footer{
+  color: black;
+  text-align: center;
+  padding: 10px 0;
+  width: 100%;
+  bottom: 0;
+}
+
+

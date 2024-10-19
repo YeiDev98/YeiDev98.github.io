@@ -1,0 +1,77 @@
+/* Media query para iPad con un ancho de 768px */
+@media (max-width: 768px) {
+  body {
+    width: 100%; /* Ajusta el ancho del body para pantallas más pequeñas */
+    max-width: 100%; /* Asegura que el body no exceda el ancho de la pantalla */
+    height: 100%;
+    padding: 5%;
+  }
+  
+  .contenedor {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 2%;
+    border-radius: 32px;
+  }
+  
+  main {
+    flex-direction: column; /* Cambia la dirección del flex a columna */
+    padding: 3%;
+    height: auto;
+    border-radius: 32px;
+  }
+  
+  .seccion1, .seccion2 {
+    width: 100%;
+    height: auto;
+    margin-bottom: 3%; /* Añade espacio entre las secciones */
+    border-radius: 30px;
+    padding: 1%;
+    box-sizing: content-box;
+    
+  }
+  
+  .text_area{
+    height: 38em; /* Ajusta la altura del textarea para pantallas más pequeñas */
+    border-radius: 20px;
+    padding: 2%;
+    text-align: center;
+  }
+  .text_area_2{
+    height: 38em; /* Ajusta la altura del textarea para pantallas más pequeñas */
+    border-radius: 20px;
+    
+  }
+  
+  .botones{
+    margin-left: 0;
+    justify-content: center; /* Centra los botones */
+  }
+  
+  .btn_encriptar, .btn_desencriptar{
+    width: 45%;
+  }
+  
+  .parrafo1{
+    font-size: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .parrafo2{
+  font-size: 60%;
+  text-align: center;
+  }
+  
+  .informacion{
+    margin-left: 20.5%;
+    padding-bottom: 2%;
+    font-size: 0.77em;
+  }
+  .hidden{
+    display: none;
+  }
+
+}
+
