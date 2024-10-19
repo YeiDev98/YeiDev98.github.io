@@ -12,8 +12,8 @@ header{
 
 body {
   width: 1280px;
-  height: 720px;
-  max-width: 1440px;
+  height: auto;
+  max-width: 1280px;
   background: F6F6FC;
   padding: 5%;
 }
