@@ -11,6 +11,17 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   request.onerror = () => alert('Error al abrir la base de datos');
+  
+  const fechaSpan = document.getElementById("fecha");
+  if (fechaSpan) {
+    const hoy = new Date();
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const anio = hoy.getFullYear();
+    const horas = String(hoy.getHours()).padStart(2, '0');
+    const minutos = String(hoy.getMinutes()).padStart(2, '0');
+    fechaSpan.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+  }
 });
 
 function cargarInventario() {
@@ -116,3 +127,18 @@ function actualizarTotal() {
 
   document.getElementById('total').textContent = `$${total.toFixed(0)}`;
 }
+
+// fecha y hora
+
+document.addEventListener("DOMContentLoaded", () => {
+  const fechaSpan = document.getElementById("fecha");
+  if (fechaSpan) {
+    const hoy = new Date();
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const anio = hoy.getFullYear();
+    const horas = String(hoy.getHours()).padStart(2, '0');
+    const minutos = String(hoy.getMinutes()).padStart(2, '0');
+    fechaSpan.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+  }
+});
