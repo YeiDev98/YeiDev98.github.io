@@ -1,144 +1,100 @@
-// factura.js
-let db;
-let inventario = [];
+const productosInventario = [
+  { nombre: 'Gaseosa', precio: 3500 },
+  { nombre: 'Papas fritas', precio: 2000 },
+  { nombre: 'Agua', precio: 2500 },
+  { nombre: 'Jugo Hit', precio: 3000 },
+  { nombre: 'Chocolatina', precio: 1800 },
+  { nombre: 'Empanada', precio: 2200 },
+  { nombre: 'Cerveza', precio: 5000 }
+];
 
-document.addEventListener('DOMContentLoaded', () => {
-  const request = indexedDB.open('miscelaneaDB', 1);
+let carrito = [];
 
-  request.onsuccess = (event) => {
-    db = event.target.result;
-    cargarInventario();
-  };
+document.getElementById('agregar').addEventListener('click', () => {
+  const nombre = document.getElementById('busqueda').value.trim();
+  const cantidad = parseInt(document.getElementById('cantidad').value);
 
-  request.onerror = () => alert('Error al abrir la base de datos');
-  
-  const fechaSpan = document.getElementById("fecha");
-  if (fechaSpan) {
-    const hoy = new Date();
-    const dia = String(hoy.getDate()).padStart(2, '0');
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    const anio = hoy.getFullYear();
-    const horas = String(hoy.getHours()).padStart(2, '0');
-    const minutos = String(hoy.getMinutes()).padStart(2, '0');
-    fechaSpan.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
+  if (!nombre || isNaN(cantidad) || cantidad < 1) return;
+
+  const producto = productosInventario.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
+  if (!producto) {
+    alert('Producto no encontrado en el inventario.');
+    return;
   }
+
+  const existente = carrito.find(p => p.nombre === producto.nombre);
+  if (existente) {
+    existente.cantidad += cantidad;
+  } else {
+    carrito.push({ ...producto, cantidad });
+  }
+
+  document.getElementById('busqueda').value = '';
+  document.getElementById('cantidad').value = 1;
+
+  actualizarTabla();
 });
 
-function cargarInventario() {
-  const transaction = db.transaction(['productos'], 'readonly');
-  const store = transaction.objectStore('productos');
-
-  const productos = [];
-  store.openCursor().onsuccess = (e) => {
-    const cursor = e.target.result;
-    if (cursor) {
-      productos.push(cursor.value);
-      cursor.continue();
-    } else {
-      inventario = productos;
-      configurarBuscador();
-    }
-  };
-}
-
-function configurarBuscador() {
-  const input = document.getElementById('busqueda');
-  const sugerencias = document.getElementById('sugerencias');
-
-  input.addEventListener('input', () => {
-    const query = input.value.toLowerCase();
-    sugerencias.innerHTML = '';
-
-    if (!query) return;
-
-    const resultados = inventario.filter(prod =>
-      prod.nombre.toLowerCase().includes(query)
-    );
-
-    resultados.forEach(prod => {
-      const div = document.createElement('div');
-      div.textContent = `${prod.nombre} - $${prod.precio}`;
-      div.className = 'sugerencia';
-      div.onclick = () => seleccionarProducto(prod);
-      sugerencias.appendChild(div);
-    });
-  });
-}
-
-function seleccionarProducto(prod) {
-  document.getElementById('busqueda').value = '';
-  document.getElementById('sugerencias').innerHTML = '';
-  agregarFila(prod);
-}
-
-function agregarFila(producto) {
-  const tbody = document.getElementById('productos-body');
-  const fila = document.createElement('tr');
-
-  const celdaNombre = document.createElement('td');
-  celdaNombre.textContent = producto.nombre;
-
-  const celdaCantidad = document.createElement('td');
-  const inputCantidad = document.createElement('input');
-  inputCantidad.type = 'number';
-  inputCantidad.min = 1;
-  inputCantidad.value = 1;
-  inputCantidad.oninput = actualizarTotal;
-  celdaCantidad.appendChild(inputCantidad);
-
-  const celdaPrecio = document.createElement('td');
-  celdaPrecio.textContent = `$${producto.precio}`;
-
-  const celdaSubtotal = document.createElement('td');
-  celdaSubtotal.textContent = `$${producto.precio}`;
-  celdaSubtotal.className = 'subtotal';
-
-  const celdaAccion = document.createElement('td');
-  celdaAccion.className = 'no-print';
-  const btnEliminar = document.createElement('button');
-  btnEliminar.textContent = 'Eliminar';
-  btnEliminar.onclick = () => {
-    fila.remove();
-    actualizarTotal();
-  };
-  celdaAccion.appendChild(btnEliminar);
-
-  fila.appendChild(celdaNombre);
-  fila.appendChild(celdaCantidad);
-  fila.appendChild(celdaPrecio);
-  fila.appendChild(celdaSubtotal);
-  fila.appendChild(celdaAccion);
-  tbody.appendChild(fila);
-
-  inputCantidad.dispatchEvent(new Event('input'));
-}
-
-function actualizarTotal() {
-  const filas = document.querySelectorAll('#productos-body tr');
+function actualizarTabla() {
+  const cuerpo = document.querySelector('#tabla-productos tbody');
+  cuerpo.innerHTML = '';
   let total = 0;
 
-  filas.forEach(fila => {
-    const cantidad = fila.querySelector('input').valueAsNumber || 0;
-    const precio = parseFloat(fila.children[2].textContent.replace('$', '')) || 0;
-    const subtotal = cantidad * precio;
-    fila.querySelector('.subtotal').textContent = `$${subtotal.toFixed(0)}`;
-    total += subtotal;
+  carrito.forEach((item, index) => {
+    const totalProducto = item.precio * item.cantidad;
+    total += totalProducto;
+
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td>${item.nombre}</td>
+      <td>$${item.precio}</td>
+      <td>${item.cantidad}</td>
+      <td>$${totalProducto}</td>
+      <td><button onclick="eliminarProducto(${index})">🗑️</button></td>
+    `;
+    cuerpo.appendChild(fila);
   });
 
-  document.getElementById('total').textContent = `$${total.toFixed(0)}`;
+  document.getElementById('total').textContent = total;
 }
 
-// fecha y hora
+function eliminarProducto(index) {
+  carrito.splice(index, 1);
+  actualizarTabla();
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  const fechaSpan = document.getElementById("fecha");
-  if (fechaSpan) {
-    const hoy = new Date();
-    const dia = String(hoy.getDate()).padStart(2, '0');
-    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
-    const anio = hoy.getFullYear();
-    const horas = String(hoy.getHours()).padStart(2, '0');
-    const minutos = String(hoy.getMinutes()).padStart(2, '0');
-    fechaSpan.textContent = `${dia}/${mes}/${anio} ${horas}:${minutos}`;
-  }
-});
+function cargarFechaHora() {
+  const ahora = new Date();
+  const opciones = {
+    year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit',
+    hour12: false
+  };
+  const fechaFormateada = ahora.toLocaleString('es-CO', opciones);
+  document.getElementById('fechaFactura').textContent = fechaFormateada;
+}
+
+function imprimirFactura() {
+  const tabla = document.getElementById('detalle-factura');
+  tabla.innerHTML = '';
+  let total = 0;
+
+  carrito.forEach(item => {
+    const fila = document.createElement('tr');
+    const totalProducto = item.precio * item.cantidad;
+    total += totalProducto;
+
+    fila.innerHTML = `
+      <td>${item.nombre}</td>
+      <td>${item.cantidad}</td>
+      <td>$${totalProducto}</td>
+    `;
+    tabla.appendChild(fila);
+  });
+
+  document.getElementById('total-factura').textContent = total;
+  cargarFechaHora();
+
+  // Solo imprime el contenido visible
+  window.print();
+}
