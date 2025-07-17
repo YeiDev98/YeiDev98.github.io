@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Factura Miscelánea</title>
+  <link rel="stylesheet" href="factura.css">
+</head>
+<body>
+  <div class="invoice-box">
+    <div class="invoice-header">
+      <div class="logo">Miscelánea</div>
+      <div class="company-details">
+        <div>Fecha: <span id="fechaFactura"></span></div>
+        <div>Factura N.º <span id="numeroFactura">001</span></div>
+      </div>
+    </div>
+
+    <!-- BUSCADOR -->
+    <section>
+      <label for="buscar">Buscar producto:</label>
+      <input type="text" id="buscar" placeholder="Nombre o código del producto">
+      <button onclick="buscarYAgregarProducto()">Agregar</button>
+    </section>
+
+    <!-- TABLA DE PRODUCTOS -->
+    <section>
+      <table id="tablaProductos">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <div class="total">Total: $<span id="totalFactura">0</span></div>
+
+    <div class="no-print">
+      <button onclick="imprimirFactura()">Imprimir</button>
+    </div>
+
+    <div class="invoice-footer">
+      Gracias por su compra
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="factura.js"></script>
+</body>
+</html>
