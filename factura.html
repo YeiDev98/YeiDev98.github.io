@@ -1,55 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Factura Miscelánea</title>
-  <link rel="stylesheet" href="factura.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facturación</title>
+  <link rel="stylesheet" href="factura.css" />
 </head>
 <body>
-  <div class="invoice-box">
-    <div class="invoice-header">
-      <div class="logo">Miscelánea</div>
-      <div class="company-details">
-        <div>Fecha: <span id="fechaFactura"></span></div>
-        <div>Factura N.º <span id="numeroFactura">001</span></div>
-      </div>
+  <div class="contenedor">
+    <h1>Sistema POS - Facturación</h1>
+    <div class="formulario">
+      <label for="busqueda">Buscar producto:</label>
+      <input type="text" id="busqueda" placeholder="Nombre del producto"/>
+
+      <label for="cantidad">Cantidad:</label>
+      <input type="number" id="cantidad" min="1" value="1"/>
+
+      <button id="agregar">Agregar</button>
     </div>
 
-    <!-- BUSCADOR -->
-    <section>
-      <label for="buscar">Buscar producto:</label>
-      <input type="text" id="buscar" placeholder="Nombre o código del producto">
-      <button onclick="buscarYAgregarProducto()">Agregar</button>
-    </section>
+    <table id="tabla-productos">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
 
-    <!-- TABLA DE PRODUCTOS -->
-    <section>
-      <table id="tablaProductos">
-        <thead>
-          <tr>
-            <th>Producto</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Total</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </section>
-
-    <div class="total">Total: $<span id="totalFactura">0</span></div>
-
-    <div class="no-print">
-      <button onclick="imprimirFactura()">Imprimir</button>
+    <div class="totales">
+      <p><strong>Total: $<span id="total">0</span></strong></p>
     </div>
 
-    <div class="invoice-footer">
-      Gracias por su compra
-    </div>
+    <button onclick="imprimirFactura()">Imprimir Factura</button>
   </div>
 
-  <script src="db.js"></script>
+  <!-- Contenido oculto para imprimir -->
+  <div id="factura-impresion" class="factura">
+    <h2>Factura</h2>
+    <p>Fecha y hora: <span id="fechaFactura"></span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="detalle-factura"></tbody>
+    </table>
+    <p><strong>Total: $<span id="total-factura"></span></strong></p>
+  </div>
+
   <script src="factura.js"></script>
 </body>
 </html>
