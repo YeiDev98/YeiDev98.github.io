@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Facturación</title>
+  <title>Facturación POS</title>
   <link rel="stylesheet" href="factura.css">
 </head>
 <body>
   <div class="contenedor">
     <h1>Sistema POS - Facturación</h1>
+    
     <div class="formulario">
       <label for="busqueda">Buscar producto:</label>
       <input type="text" id="busqueda" placeholder="Nombre del producto">
-      
+
       <label for="cantidad">Cantidad:</label>
       <input type="number" id="cantidad" min="1" value="1">
-      
+
       <button id="agregar">Agregar</button>
     </div>
 
@@ -39,9 +40,9 @@
     <button id="imprimir">Imprimir Factura</button>
   </div>
 
-  <!-- Recibo oculto -->
-  <div id="factura-impresion" class="factura" style="display: none;">
-    <h2>Miscelánea</h2>
+  <!-- Contenido que se imprime como recibo -->
+  <div id="factura-impresion" class="factura">
+    <h2>Factura</h2>
     <p>Fecha y hora: <span id="fecha"></span></p>
     <table>
       <thead>
@@ -54,9 +55,9 @@
       <tbody id="detalle-factura"></tbody>
     </table>
     <p><strong>Total: $<span id="total-factura"></span></strong></p>
-    <p>¡Gracias por su compra!</p>
   </div>
 
   <script src="factura.js"></script>
 </body>
 </html>
+
