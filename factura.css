@@ -115,51 +115,46 @@ button:hover {
 @media print {
   body {
     background: white;
-    font-size: 9pt;
-    color: #000;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .no-print {
-    display: none;
-  }
-
-  .invoice-box {
-    width: 72mm;
     margin: 0;
     padding: 0;
-    border: none;
-    box-shadow: none;
   }
 
-  .invoice-header,
-  .invoice-footer {
-    text-align: center;
-    border: none;
+  #factura-content {
+    width: 80mm;
+    margin: 0 auto;
+    font-size: 12px;
+    padding: 10px;
   }
 
-  th, td {
-    border: none;
-    padding: 2px 0;
+  #formulario,
+  #botones,
+  .no-imprimir {
+    display: none !important;
+  }
+
+  #factura-content {
+    display: block !important;
   }
 
   table {
-    font-size: 9pt;
+    width: 100%;
+    border-collapse: collapse;
   }
 
-  .total {
-    font-weight: bold;
-    font-size: 10pt;
-    border-top: 1px dashed #000;
-    padding-top: 4px;
-    color: #000;
+  td,
+  th {
+    padding: 2px 0;
+    border-bottom: 1px dashed #ccc;
   }
 
-  .logo {
-    color: #000;
+  h2,
+  h4,
+  p {
+    text-align: center;
+    margin: 4px 0;
   }
 }
+
 
 .sugerencias-container {
   border: 1px solid #ccc;
