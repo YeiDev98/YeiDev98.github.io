@@ -1,176 +1,141 @@
-:root {
-  --azul-factura: #1976d2;
-  --borde-color: #ccc;
-  --fuente: 'Segoe UI', sans-serif;
-}
-
+/* Estilos generales */
 body {
-  font-family: var(--fuente);
-  font-size: 11pt;
-  background: #f9f9f9;
-  margin: 0;
-  padding: 0;
-  color: #333;
-}
-
-.invoice-box {
-  width: 100%;
-  max-width: 750px;
-  margin: 20px auto;
-  background: #fff;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   padding: 20px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--borde-color);
-  box-sizing: border-box;
+  margin: 0;
 }
 
-.invoice-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--azul-factura);
-  margin-bottom: 15px;
-  padding-bottom: 8px;
+.contenedor {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 800px;
+  margin: auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  font-size: 1.5rem;
+h1, h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.formulario {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.formulario label {
+  grid-column: span 2;
   font-weight: bold;
-  color: var(--azul-factura);
 }
 
-.company-details {
-  text-align: right;
-  font-size: 0.9rem;
-  color: #555;
+.formulario input {
+  padding: 8px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 
-section {
-  margin-bottom: 10px;
+.formulario button {
+  grid-column: span 2;
+  padding: 10px;
+  font-size: 16px;
+  background-color: #00b894;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-input[type="text"], input[type="number"] {
-  width: 100%;
-  padding: 6px;
-  font-size: 10pt;
-  margin-top: 3px;
-  margin-bottom: 5px;
-  box-sizing: border-box;
+.formulario button:hover {
+  background-color: #019875;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
-  font-size: 10pt;
+  margin-top: 20px;
 }
 
-th, td {
+table th, table td {
   border: 1px solid #ccc;
-  padding: 6px;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
 }
 
-th {
-  background-color: #f0f0f0;
-}
-
-.total {
+.totales {
   text-align: right;
-  margin-top: 15px;
-  font-size: 1.2rem;
-  color: var(--azul-factura);
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+button#imprimir {
+  display: block;
+  margin: 30px auto 0;
+  padding: 10px 20px;
+  background-color: #0984e3;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button#imprimir:hover {
+  background-color: #0652dd;
+}
+
+/* Factura para impresión */
+.factura {
+  max-width: 300px;
+  margin: auto;
+  padding: 20px;
+  font-size: 14px;
+  background: white;
+  border: 1px dashed #ccc;
+  border-radius: 10px;
+}
+
+.factura h2 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.factura table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.factura table th,
+.factura table td {
+  border: 1px solid #ddd;
+  padding: 4px;
+  font-size: 12px;
+  text-align: center;
+}
+
+.factura p {
+  text-align: right;
+  margin-top: 10px;
   font-weight: bold;
 }
 
-.invoice-footer {
-  text-align: center;
-  font-size: 0.85rem;
-  color: #777;
-  border-top: 1px solid #ccc;
-  margin-top: 25px;
-  padding-top: 10px;
-}
-
-button {
-  padding: 8px 14px;
-  font-size: 10pt;
-  background-color: var(--azul-factura);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #125ca1;
-}
-
-.no-print {
-  margin-top: 15px;
-}
-
-/* ========= SOLO PARA IMPRESIÓN ========= */
+/* Estilos específicos para impresión */
 @media print {
-  body {
-    background: white;
-    margin: 0;
-    padding: 0;
+  body * {
+    visibility: hidden;
   }
 
-  #factura-content {
-    width: 80mm;
-    margin: 0 auto;
-    font-size: 12px;
-    padding: 10px;
+  #factura-impresion, #factura-impresion * {
+    visibility: visible;
   }
 
-  #formulario,
-  #botones,
-  .no-imprimir {
-    display: none !important;
-  }
-
-  #factura-content {
-    display: block !important;
-  }
-
-  table {
+  #factura-impresion {
+    position: absolute;
+    left: 0;
+    top: 0;
     width: 100%;
-    border-collapse: collapse;
   }
-
-  td,
-  th {
-    padding: 2px 0;
-    border-bottom: 1px dashed #ccc;
-  }
-
-  h2,
-  h4,
-  p {
-    text-align: center;
-    margin: 4px 0;
-  }
-}
-
-
-.sugerencias-container {
-  border: 1px solid #ccc;
-  max-height: 150px;
-  overflow-y: auto;
-  background: #fff;
-  position: absolute;
-  z-index: 100;
-  width: 100%;
-}
-
-.sugerencia {
-  padding: 5px 10px;
-  cursor: pointer;
-}
-
-.sugerencia:hover {
-  background-color: #f0f0f0;
 }
