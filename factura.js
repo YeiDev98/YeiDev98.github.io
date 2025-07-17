@@ -1,146 +1,109 @@
-// ==== CONECTAR A INVENTARIO EN INDEXEDDB ====
-let db;
+// factura.js
 
-const request = indexedDB.open("miscelaneaDB", 1);
-
-request.onsuccess = (event) => {
-  db = event.target.result;
+document.addEventListener("DOMContentLoaded", () => {
   mostrarFechaHora();
-};
+  configurarEventos();
+});
 
-request.onerror = () => {
-  console.error("Error al abrir la base de datos.");
-};
-
-request.onupgradeneeded = (event) => {
-  const db = event.target.result;
-  if (!db.objectStoreNames.contains("inventario")) {
-    const store = db.createObjectStore("inventario", { keyPath: "codigo" });
-    store.createIndex("nombre", "nombre", { unique: false });
-  }
-};
-
-// ==== MOSTRAR FECHA Y HORA ====
+// Mostrar fecha y hora actual en factura
 function mostrarFechaHora() {
   const ahora = new Date();
-  const fecha = ahora.toLocaleDateString();
-  const hora = ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const fecha = ahora.toLocaleDateString('es-CO');
+  const hora = ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
   document.getElementById("fechaFactura").textContent = `${fecha} ${hora}`;
 }
 
-// ==== BUSCAR Y AGREGAR PRODUCTO ====
+// Buscar y agregar producto desde IndexedDB
 function buscarYAgregarProducto() {
-  const texto = document.getElementById("buscar").value.trim().toLowerCase();
+  const criterio = document.getElementById("buscar").value.trim().toLowerCase();
+  if (!criterio) return;
 
-  if (!texto || !db) return;
+  const transaction = db.transaction(["productos"], "readonly");
+  const store = transaction.objectStore("productos");
+  const productos = [];
 
-  const transaction = db.transaction("inventario", "readonly");
-  const store = transaction.objectStore("inventario");
-
-  let encontrado = false;
-
-  // Buscar por código
-  const reqCodigo = store.get(texto);
-  reqCodigo.onsuccess = () => {
-    if (reqCodigo.result) {
-      agregarProductoFactura(reqCodigo.result);
-      encontrado = true;
-    }
-  };
-
-  reqCodigo.onerror = () => {
-    console.error("Error al buscar producto.");
-  };
-
-  // Buscar por nombre si no se encontró por código
-  transaction.oncomplete = () => {
-    if (!encontrado) {
-      const newTransaction = db.transaction("inventario", "readonly");
-      const index = newTransaction.objectStore("inventario").index("nombre");
-      const reqCursor = index.openCursor();
-      reqCursor.onsuccess = (e) => {
-        const cursor = e.target.result;
-        if (cursor) {
-          const nombreProducto = cursor.value.nombre.toLowerCase();
-          if (nombreProducto.includes(texto)) {
-            agregarProductoFactura(cursor.value);
-            return;
-          }
-          cursor.continue();
-        } else {
-          alert("Producto no encontrado.");
-        }
-      };
+  store.openCursor().onsuccess = function (event) {
+    const cursor = event.target.result;
+    if (cursor) {
+      const producto = cursor.value;
+      if (
+        producto.nombre.toLowerCase().includes(criterio) ||
+        producto.codigo?.toLowerCase().includes(criterio)
+      ) {
+        productos.push(producto);
+      }
+      cursor.continue();
+    } else {
+      if (productos.length > 0) {
+        agregarProductoAFactura(productos[0]); // Agrega el primero encontrado
+      } else {
+        alert("Producto no encontrado");
+      }
     }
   };
 }
 
-// ==== AGREGAR PRODUCTO A LA FACTURA ====
-function agregarProductoFactura(producto) {
+// Agregar producto a la tabla de la factura
+function agregarProductoAFactura(producto) {
   const tbody = document.querySelector("#tablaProductos tbody");
 
   const fila = document.createElement("tr");
 
-  // Nombre
   const tdNombre = document.createElement("td");
   tdNombre.textContent = producto.nombre;
 
-  // Cantidad (editable)
   const tdCantidad = document.createElement("td");
   const inputCantidad = document.createElement("input");
   inputCantidad.type = "number";
   inputCantidad.value = 1;
   inputCantidad.min = 1;
-  inputCantidad.oninput = actualizarTotalFactura;
+  inputCantidad.addEventListener("input", () => {
+    tdTotal.textContent = (inputCantidad.value * producto.precio).toFixed(2);
+    actualizarTotalFactura();
+  });
   tdCantidad.appendChild(inputCantidad);
 
-  // Precio
   const tdPrecio = document.createElement("td");
-  tdPrecio.textContent = producto.precio;
+  tdPrecio.textContent = producto.precio.toFixed(2);
 
-  // Total por producto
   const tdTotal = document.createElement("td");
-  tdTotal.textContent = producto.precio;
+  tdTotal.textContent = producto.precio.toFixed(2);
 
-  // Botón eliminar
   const tdEliminar = document.createElement("td");
   const btnEliminar = document.createElement("button");
-  btnEliminar.textContent = "❌";
+  btnEliminar.textContent = "✕";
   btnEliminar.onclick = () => {
     fila.remove();
     actualizarTotalFactura();
   };
   tdEliminar.appendChild(btnEliminar);
 
-  fila.append(tdNombre, tdCantidad, tdPrecio, tdTotal, tdEliminar);
-  tbody.appendChild(fila);
+  fila.appendChild(tdNombre);
+  fila.appendChild(tdCantidad);
+  fila.appendChild(tdPrecio);
+  fila.appendChild(tdTotal);
+  fila.appendChild(tdEliminar);
 
-  inputCantidad.addEventListener("input", () => {
-    const cantidad = parseInt(inputCantidad.value) || 1;
-    tdTotal.textContent = producto.precio * cantidad;
-    actualizarTotalFactura();
-  });
+  tbody.appendChild(fila);
 
   actualizarTotalFactura();
 }
 
-// ==== ACTUALIZAR TOTAL DE FACTURA ====
+// Calcular y mostrar el total de la factura
 function actualizarTotalFactura() {
-  let total = 0;
   const filas = document.querySelectorAll("#tablaProductos tbody tr");
+  let total = 0;
 
   filas.forEach(fila => {
-    const precio = parseFloat(fila.children[2].textContent);
-    const cantidad = parseInt(fila.children[1].children[0].value);
-    total += precio * cantidad;
-    fila.children[3].textContent = (precio * cantidad).toFixed(2);
+    const cantidad = parseFloat(fila.querySelector("input").value);
+    const precio = parseFloat(fila.cells[2].textContent);
+    total += cantidad * precio;
   });
 
   document.getElementById("totalFactura").textContent = total.toFixed(2);
 }
 
-// ==== IMPRIMIR FACTURA ====
+// Imprimir la factura (oculta botones y otros elementos no imprimibles)
 function imprimirFactura() {
-  mostrarFechaHora(); // Asegura que la hora esté actualizada antes de imprimir
   window.print();
 }
