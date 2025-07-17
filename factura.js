@@ -1,5 +1,3 @@
-// factura.js
-
 document.addEventListener("DOMContentLoaded", () => {
   mostrarFechaHora();
   configurarEventos();
@@ -9,7 +7,10 @@ document.addEventListener("DOMContentLoaded", () => {
 function mostrarFechaHora() {
   const ahora = new Date();
   const fecha = ahora.toLocaleDateString('es-CO');
-  const hora = ahora.toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' });
+  const hora = ahora.toLocaleTimeString('es-CO', {
+    hour: '2-digit',
+    minute: '2-digit'
+  });
   document.getElementById("fechaFactura").textContent = `${fecha} ${hora}`;
 }
 
@@ -103,7 +104,21 @@ function actualizarTotalFactura() {
   document.getElementById("totalFactura").textContent = total.toFixed(2);
 }
 
-// Imprimir la factura (oculta botones y otros elementos no imprimibles)
-function imprimirFactura() {
-  window.print();
+// Configurar eventos de los botones y entradas
+function configurarEventos() {
+  const btnAgregar = document.getElementById("btnAgregarProducto");
+  const inputBuscar = document.getElementById("buscar");
+
+  if (btnAgregar) {
+    btnAgregar.addEventListener("click", buscarYAgregarProducto);
+  }
+
+  if (inputBuscar) {
+    inputBuscar.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        buscarYAgregarProducto();
+      }
+    });
+  }
 }
