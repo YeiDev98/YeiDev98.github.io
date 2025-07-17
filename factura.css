@@ -1,128 +1,50 @@
-/* Estilos generales */
+/* factura.css */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  padding: 20px;
+  font-family: sans-serif;
   margin: 0;
+  padding: 0;
 }
 
 .contenedor {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 800px;
+  max-width: 700px;
   margin: auto;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
 }
 
 h1, h2 {
   text-align: center;
-  margin-bottom: 20px;
 }
 
-.formulario {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.formulario label {
-  grid-column: span 2;
-  font-weight: bold;
-}
-
-.formulario input {
-  padding: 8px;
-  font-size: 16px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.formulario button {
-  grid-column: span 2;
-  padding: 10px;
-  font-size: 16px;
-  background-color: #00b894;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.formulario button:hover {
-  background-color: #019875;
+.formulario, .totales {
+  margin-top: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-table th, table td {
+table, th, td {
   border: 1px solid #ccc;
-  padding: 10px;
+}
+
+th, td {
+  padding: 8px;
   text-align: center;
 }
 
-.totales {
-  text-align: right;
-  margin-top: 20px;
-  font-size: 18px;
-}
-
-button#imprimir {
-  display: block;
-  margin: 30px auto 0;
-  padding: 10px 20px;
-  background-color: #0984e3;
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
+  border-radius: 5px;
 }
 
-button#imprimir:hover {
-  background-color: #0652dd;
-}
-
-/* Factura para impresión */
-.factura {
-  max-width: 300px;
-  margin: auto;
-  padding: 20px;
-  font-size: 14px;
-  background: white;
-  border: 1px dashed #ccc;
-  border-radius: 10px;
-}
-
-.factura h2 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.factura table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.factura table th,
-.factura table td {
-  border: 1px solid #ddd;
-  padding: 4px;
-  font-size: 12px;
-  text-align: center;
-}
-
-.factura p {
-  text-align: right;
-  margin-top: 10px;
-  font-weight: bold;
-}
-
-/* Estilos específicos para impresión */
+/* Estilo solo para impresión */
 @media print {
   body * {
     visibility: hidden;
@@ -137,5 +59,11 @@ button#imprimir:hover {
     left: 0;
     top: 0;
     width: 100%;
+    padding: 20px;
+    font-size: 14px;
+  }
+
+  button {
+    display: none;
   }
 }
