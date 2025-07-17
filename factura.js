@@ -1,100 +1,137 @@
-const productosInventario = [
-  { nombre: 'Gaseosa', precio: 3500 },
-  { nombre: 'Papas fritas', precio: 2000 },
-  { nombre: 'Agua', precio: 2500 },
-  { nombre: 'Jugo Hit', precio: 3000 },
-  { nombre: 'Chocolatina', precio: 1800 },
-  { nombre: 'Empanada', precio: 2200 },
-  { nombre: 'Cerveza', precio: 5000 }
-];
+document.addEventListener("DOMContentLoaded", () => {
+  const inventario = [
+    { nombre: "Jabón", precio: 2500 },
+    { nombre: "Gaseosa", precio: 3500 },
+    { nombre: "Aceite", precio: 5200 },
+    { nombre: "Pan", precio: 1800 },
+  ];
 
-let carrito = [];
+  const inputBusqueda = document.getElementById("busqueda");
+  const inputCantidad = document.getElementById("cantidad");
+  const btnAgregar = document.getElementById("agregar");
+  const tablaBody = document.querySelector("#tabla-productos tbody");
+  const totalSpan = document.getElementById("total");
+  const imprimirBtn = document.getElementById("imprimir");
 
-document.getElementById('agregar').addEventListener('click', () => {
-  const nombre = document.getElementById('busqueda').value.trim();
-  const cantidad = parseInt(document.getElementById('cantidad').value);
+  const facturaImpresion = document.getElementById("factura-impresion");
+  const fechaImpresion = document.getElementById("fecha");
+  const detalleFactura = document.getElementById("detalle-factura");
+  const totalFactura = document.getElementById("total-factura");
 
-  if (!nombre || isNaN(cantidad) || cantidad < 1) return;
+  let productosFactura = [];
 
-  const producto = productosInventario.find(p => p.nombre.toLowerCase() === nombre.toLowerCase());
-  if (!producto) {
-    alert('Producto no encontrado en el inventario.');
-    return;
+  function buscarProducto(nombre) {
+    return inventario.find(
+      (p) => p.nombre.toLowerCase() === nombre.trim().toLowerCase()
+    );
   }
 
-  const existente = carrito.find(p => p.nombre === producto.nombre);
-  if (existente) {
-    existente.cantidad += cantidad;
-  } else {
-    carrito.push({ ...producto, cantidad });
+  function agregarProducto() {
+    const nombre = inputBusqueda.value;
+    const cantidad = parseInt(inputCantidad.value);
+    if (!nombre || isNaN(cantidad) || cantidad <= 0) return;
+
+    const producto = buscarProducto(nombre);
+    if (!producto) {
+      alert("Producto no encontrado en el inventario");
+      return;
+    }
+
+    const existente = productosFactura.find((p) => p.nombre === producto.nombre);
+    if (existente) {
+      existente.cantidad += cantidad;
+      existente.total = existente.cantidad * existente.precio;
+    } else {
+      productosFactura.push({
+        nombre: producto.nombre,
+        precio: producto.precio,
+        cantidad,
+        total: producto.precio * cantidad,
+      });
+    }
+
+    inputBusqueda.value = "";
+    inputCantidad.value = 1;
+    renderTabla();
+    actualizarTotal();
   }
 
-  document.getElementById('busqueda').value = '';
-  document.getElementById('cantidad').value = 1;
+  function eliminarProducto(index) {
+    productosFactura.splice(index, 1);
+    renderTabla();
+    actualizarTotal();
+  }
 
-  actualizarTabla();
+  function renderTabla() {
+    tablaBody.innerHTML = "";
+    productosFactura.forEach((p, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${p.nombre}</td>
+        <td>$${p.precio}</td>
+        <td>${p.cantidad}</td>
+        <td>$${p.total}</td>
+        <td><button onclick="eliminarProductoDesdeBoton(${i})">Eliminar</button></td>
+      `;
+      tablaBody.appendChild(row);
+    });
+  }
+
+  // Función para poder eliminar desde botón inline
+  window.eliminarProductoDesdeBoton = eliminarProducto;
+
+  function actualizarTotal() {
+    const total = productosFactura.reduce((sum, p) => sum + p.total, 0);
+    totalSpan.textContent = total.toLocaleString();
+  }
+
+  function obtenerFechaHora() {
+    const now = new Date();
+    const fecha = now.toLocaleDateString("es-CO");
+    const hora = now.toLocaleTimeString("es-CO", { hour: '2-digit', minute: '2-digit' });
+    return `${fecha} ${hora}`;
+  }
+
+  function imprimirFactura() {
+    // Rellenar la sección oculta con la info actual
+    fechaImpresion.textContent = obtenerFechaHora();
+    detalleFactura.innerHTML = "";
+    productosFactura.forEach((p) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${p.nombre}</td>
+        <td>${p.cantidad}</td>
+        <td>$${p.total}</td>
+      `;
+      detalleFactura.appendChild(row);
+    });
+
+    totalFactura.textContent = productosFactura.reduce((sum, p) => sum + p.total, 0).toLocaleString();
+
+    // Mostrar solo el contenido de factura-impresion
+    const ventana = window.open("", "Imprimir", "width=400,height=600");
+    ventana.document.write(`
+      <html>
+        <head>
+          <title>Factura</title>
+          <style>
+            body { font-family: sans-serif; padding: 20px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            th, td { border: 1px solid #ccc; padding: 4px; text-align: left; }
+            h2 { text-align: center; margin-bottom: 10px; }
+          </style>
+        </head>
+        <body>
+          ${facturaImpresion.innerHTML}
+        </body>
+      </html>
+    `);
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
+    ventana.close();
+  }
+
+  btnAgregar.addEventListener("click", agregarProducto);
+  imprimirBtn.addEventListener("click", imprimirFactura);
 });
-
-function actualizarTabla() {
-  const cuerpo = document.querySelector('#tabla-productos tbody');
-  cuerpo.innerHTML = '';
-  let total = 0;
-
-  carrito.forEach((item, index) => {
-    const totalProducto = item.precio * item.cantidad;
-    total += totalProducto;
-
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td>${item.nombre}</td>
-      <td>$${item.precio}</td>
-      <td>${item.cantidad}</td>
-      <td>$${totalProducto}</td>
-      <td><button onclick="eliminarProducto(${index})">🗑️</button></td>
-    `;
-    cuerpo.appendChild(fila);
-  });
-
-  document.getElementById('total').textContent = total;
-}
-
-function eliminarProducto(index) {
-  carrito.splice(index, 1);
-  actualizarTabla();
-}
-
-function cargarFechaHora() {
-  const ahora = new Date();
-  const opciones = {
-    year: 'numeric', month: '2-digit', day: '2-digit',
-    hour: '2-digit', minute: '2-digit', second: '2-digit',
-    hour12: false
-  };
-  const fechaFormateada = ahora.toLocaleString('es-CO', opciones);
-  document.getElementById('fechaFactura').textContent = fechaFormateada;
-}
-
-function imprimirFactura() {
-  const tabla = document.getElementById('detalle-factura');
-  tabla.innerHTML = '';
-  let total = 0;
-
-  carrito.forEach(item => {
-    const fila = document.createElement('tr');
-    const totalProducto = item.precio * item.cantidad;
-    total += totalProducto;
-
-    fila.innerHTML = `
-      <td>${item.nombre}</td>
-      <td>${item.cantidad}</td>
-      <td>$${totalProducto}</td>
-    `;
-    tabla.appendChild(fila);
-  });
-
-  document.getElementById('total-factura').textContent = total;
-  cargarFechaHora();
-
-  // Solo imprime el contenido visible
-  window.print();
-}
