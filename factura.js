@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  await abrirDB();
   mostrarFechaHora();
   configurarEventos();
 });
@@ -53,22 +54,24 @@ function agregarProductoAFactura(producto) {
   const tdNombre = document.createElement("td");
   tdNombre.textContent = producto.nombre;
 
+  const tdPrecio = document.createElement("td");
+  tdPrecio.textContent = producto.precio.toFixed(2);
+
   const tdCantidad = document.createElement("td");
   const inputCantidad = document.createElement("input");
   inputCantidad.type = "number";
   inputCantidad.value = 1;
   inputCantidad.min = 1;
+
+  const tdTotal = document.createElement("td");
+  tdTotal.textContent = producto.precio.toFixed(2);
+
   inputCantidad.addEventListener("input", () => {
     tdTotal.textContent = (inputCantidad.value * producto.precio).toFixed(2);
     actualizarTotalFactura();
   });
+
   tdCantidad.appendChild(inputCantidad);
-
-  const tdPrecio = document.createElement("td");
-  tdPrecio.textContent = producto.precio.toFixed(2);
-
-  const tdTotal = document.createElement("td");
-  tdTotal.textContent = producto.precio.toFixed(2);
 
   const tdEliminar = document.createElement("td");
   const btnEliminar = document.createElement("button");
@@ -80,8 +83,8 @@ function agregarProductoAFactura(producto) {
   tdEliminar.appendChild(btnEliminar);
 
   fila.appendChild(tdNombre);
-  fila.appendChild(tdCantidad);
   fila.appendChild(tdPrecio);
+  fila.appendChild(tdCantidad);
   fila.appendChild(tdTotal);
   fila.appendChild(tdEliminar);
 
@@ -97,7 +100,7 @@ function actualizarTotalFactura() {
 
   filas.forEach(fila => {
     const cantidad = parseFloat(fila.querySelector("input").value);
-    const precio = parseFloat(fila.cells[2].textContent);
+    const precio = parseFloat(fila.cells[1].textContent);
     total += cantidad * precio;
   });
 
