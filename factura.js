@@ -51,28 +51,34 @@ function agregarProductoAFactura(producto) {
 
   const fila = document.createElement("tr");
 
+  // Nombre del producto
   const tdNombre = document.createElement("td");
   tdNombre.textContent = producto.nombre;
 
+  // Precio (no editable)
   const tdPrecio = document.createElement("td");
   tdPrecio.textContent = producto.precio.toFixed(2);
 
+  // Cantidad (editable)
   const tdCantidad = document.createElement("td");
   const inputCantidad = document.createElement("input");
   inputCantidad.type = "number";
   inputCantidad.value = 1;
   inputCantidad.min = 1;
+  tdCantidad.appendChild(inputCantidad);
 
+  // Total (calculado)
   const tdTotal = document.createElement("td");
   tdTotal.textContent = producto.precio.toFixed(2);
 
+  // Evento para recalcular total cuando cambie la cantidad
   inputCantidad.addEventListener("input", () => {
-    tdTotal.textContent = (inputCantidad.value * producto.precio).toFixed(2);
+    const nuevaCantidad = parseFloat(inputCantidad.value) || 0;
+    tdTotal.textContent = (nuevaCantidad * producto.precio).toFixed(2);
     actualizarTotalFactura();
   });
 
-  tdCantidad.appendChild(inputCantidad);
-
+  // Botón eliminar
   const tdEliminar = document.createElement("td");
   const btnEliminar = document.createElement("button");
   btnEliminar.textContent = "✕";
@@ -82,6 +88,7 @@ function agregarProductoAFactura(producto) {
   };
   tdEliminar.appendChild(btnEliminar);
 
+  // Agregar en el orden correcto
   fila.appendChild(tdNombre);
   fila.appendChild(tdPrecio);
   fila.appendChild(tdCantidad);
@@ -99,8 +106,8 @@ function actualizarTotalFactura() {
   let total = 0;
 
   filas.forEach(fila => {
-    const cantidad = parseFloat(fila.querySelector("input").value);
-    const precio = parseFloat(fila.cells[1].textContent);
+    const cantidad = parseFloat(fila.querySelector("input").value) || 0;
+    const precio = parseFloat(fila.cells[1].textContent); // ahora Precio está en columna 1
     total += cantidad * precio;
   });
 
