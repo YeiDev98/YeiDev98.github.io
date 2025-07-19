@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Facturación</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema POS - Inicio</title>
+  <link rel="stylesheet" href="factura.css">
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 40px;
+    .inicio {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       height: 100vh;
+      text-align: center;
     }
 
-    h1 {
+    .inicio h1 {
+      margin-bottom: 30px;
       color: #333;
     }
 
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 12px 24px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
+    .inicio button {
+      margin: 10px;
+      padding: 15px 30px;
+      font-size: 18px;
       border-radius: 8px;
-      font-weight: bold;
-      transition: background-color 0.3s;
+      cursor: pointer;
     }
 
-    a:hover {
-      background-color: #0056b3;
+    .btn-pos {
+      background-color: #007bff;
+    }
+
+    .btn-admin {
+      background-color: #28a745;
+    }
+
+    .inicio button:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
-  <h1>🧾 Sistema de Facturación POS</h1>
-  <a href="factura.html">Ir a la Factura</a>
+  <div class="inicio">
+    <h1>Bienvenido al Sistema POS</h1>
+    <button class="btn-pos" onclick="location.href='pos.html'">Ir a Facturación (POS)</button>
+    <button class="btn-admin" onclick="location.href='admin.html'">Administrar Productos</button>
+  </div>
 </body>
 </html>
