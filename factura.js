@@ -124,4 +124,49 @@ function configurarEventos() {
       }
     });
   }
+  const btnImprimir = document.getElementById("imprimir");
+  if (btnImprimir) {
+  btnImprimir.addEventListener("click", imprimirFactura);
+  }
+}
+
+// Imprimir la factura
+function imprimirFactura() {
+  const detalle = document.getElementById("detalle-factura");
+  detalle.innerHTML = "";
+
+  const filas = document.querySelectorAll("#tablaProductos tbody tr");
+
+  filas.forEach(fila => {
+    const nombre = fila.cells[0].textContent;
+    const cantidad = fila.querySelector("input").value;
+    const total = fila.cells[3].textContent;
+
+    const filaImpresion = document.createElement("tr");
+
+    const tdNombre = document.createElement("td");
+    tdNombre.textContent = nombre;
+
+    const tdCantidad = document.createElement("td");
+    tdCantidad.textContent = cantidad;
+
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = total;
+
+    filaImpresion.appendChild(tdNombre);
+    filaImpresion.appendChild(tdCantidad);
+    filaImpresion.appendChild(tdTotal);
+
+    detalle.appendChild(filaImpresion);
+  });
+
+  // Copiar total a impresión (ya actualizado)
+  const total = document.getElementById("totalFactura").textContent;
+  document.querySelector("#factura-impresion #totalFactura").textContent = total;
+
+  // Mostrar fecha actual
+  mostrarFechaHora();
+
+  // Imprimir
+  window.print();
 }
