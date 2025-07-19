@@ -3,19 +3,37 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #f9f9f9;
 }
 
 .contenedor {
   max-width: 700px;
   margin: auto;
   padding: 20px;
+  background-color: white;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  margin-top: 30px;
+  border-radius: 8px;
 }
 
 h1, h2 {
   text-align: center;
+  color: #333;
 }
 
-.formulario, .totales {
+.formulario {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.formulario input {
+  padding: 8px;
+  font-size: 16px;
+}
+
+.totales {
   margin-top: 20px;
 }
 
@@ -34,6 +52,11 @@ th, td {
   text-align: center;
 }
 
+th {
+  background-color: #f0f0f0;
+  color: #222;
+}
+
 button {
   padding: 10px 15px;
   margin-top: 10px;
@@ -42,6 +65,11 @@ button {
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 
 /* Estilo solo para impresión */
@@ -61,6 +89,7 @@ button {
     width: 100%;
     padding: 20px;
     font-size: 14px;
+    background-color: white;
   }
 
   button {
