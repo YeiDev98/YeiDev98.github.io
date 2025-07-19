@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facturación POS</title>
+  <link rel="stylesheet" href="factura.css" />
+</head>
+<body>
+  <div class="contenedor">
+    <h1>Sistema POS - Facturación</h1>
+
+    <div class="formulario">
+      <label for="busqueda">Buscar producto:</label>
+      <input type="text" id="buscar" placeholder="Nombre del producto o código" />
+
+      <label for="cantidad">Cantidad:</label>
+      <input type="number" id="cantidad" min="1" value="1" />
+
+      <button id="btnAgregarProducto">Agregar</button>
+    </div>
+
+    <table id="tablaProductos">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Total</th>
+          <th>Eliminar</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <div class="totales">
+      <p><strong>Total: $<span id="totalFactura">0</span></strong></p>
+    </div>
+
+    <button id="imprimir">Imprimir Factura</button>
+  </div>
+
+  <!-- Contenido que se imprime como recibo -->
+  <div id="factura-impresion" class="factura">
+    <h2>Factura</h2>
+    <p>Fecha y hora: <span id="fechaFactura"></span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody id="detalle-factura"></tbody>
+    </table>
+    <p><strong>Total: $<span id="totalFactura"></span></strong></p>
+  </div>
+
+  <script src="db.js"></script>
+  <script src="factura.js"></script>
+</body>
+</html>
