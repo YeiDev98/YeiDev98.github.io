@@ -1,83 +1,68 @@
 document.addEventListener("DOMContentLoaded", async () => {
   await abrirDB();
-  configurarEventos();
-  cargarProductos();
-});
+  mostrarProductos();
 
-function configurarEventos() {
-  const btnAgregar = document.getElementById("agregarProducto");
+  document.getElementById("formulario").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  btnAgregar.addEventListener("click", async () => {
     const nombre = document.getElementById("nombre").value.trim();
     const codigo = document.getElementById("codigo").value.trim();
     const precio = parseFloat(document.getElementById("precio").value);
+    const stock = parseInt(document.getElementById("stock").value);
 
-    if (!nombre || !codigo || isNaN(precio)) {
-      alert("Por favor completa todos los campos.");
+    if (!nombre || !codigo || isNaN(precio) || isNaN(stock)) {
+      alert("Todos los campos son obligatorios.");
       return;
     }
 
-    const producto = { nombre, codigo, precio };
-    await agregarProductoInventario(producto);
+    const producto = {
+      id: crypto.randomUUID(),
+      nombre,
+      codigo,
+      precio,
+      stock
+    };
 
-    document.getElementById("nombre").value = '';
-    document.getElementById("codigo").value = '';
-    document.getElementById("precio").value = '';
+    const tx = db.transaction("productos", "readwrite");
+    const store = tx.objectStore("productos");
+    await store.add(producto);
+    await tx.done;
 
-    cargarProductos();
+    document.getElementById("formulario").reset();
+    mostrarProductos();
   });
-}
+});
 
-async function cargarProductos() {
-  const tbody = document.querySelector("#tablaInventario tbody");
-  tbody.innerHTML = "";
-
-  const db = await abrirDB();
+async function mostrarProductos() {
   const tx = db.transaction("productos", "readonly");
   const store = tx.objectStore("productos");
 
-  store.openCursor().onsuccess = function (event) {
-    const cursor = event.target.result;
-    if (cursor) {
-      const producto = cursor.value;
+  const lista = document.getElementById("lista-productos");
+  lista.innerHTML = "";
 
-      const fila = document.createElement("tr");
+  let cursor = await store.openCursor();
+  while (cursor) {
+    const { id, nombre, codigo, precio, stock } = cursor.value;
 
-      const tdNombre = document.createElement("td");
-      tdNombre.textContent = producto.nombre;
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+      <td>${nombre}</td>
+      <td>${codigo}</td>
+      <td>${precio.toFixed(2)}</td>
+      <td>${stock}</td>
+      <td><button onclick="eliminarProducto('${id}')">Eliminar</button></td>
+    `;
 
-      const tdCodigo = document.createElement("td");
-      tdCodigo.textContent = producto.codigo;
-
-      const tdPrecio = document.createElement("td");
-      tdPrecio.textContent = producto.precio.toFixed(2);
-
-      const tdEliminar = document.createElement("td");
-      const btnEliminar = document.createElement("button");
-      btnEliminar.textContent = "🗑️";
-      btnEliminar.onclick = () => eliminarProducto(cursor.primaryKey);
-
-      tdEliminar.appendChild(btnEliminar);
-
-      fila.appendChild(tdNombre);
-      fila.appendChild(tdCodigo);
-      fila.appendChild(tdPrecio);
-      fila.appendChild(tdEliminar);
-
-      tbody.appendChild(fila);
-
-      cursor.continue();
-    }
-  };
+    lista.appendChild(fila);
+    cursor = await cursor.continue();
+  }
 }
 
 async function eliminarProducto(id) {
-  const db = await abrirDB();
   const tx = db.transaction("productos", "readwrite");
   const store = tx.objectStore("productos");
-  store.delete(id);
+  await store.delete(id);
+  await tx.done;
 
-  tx.oncomplete = () => {
-    cargarProductos();
-  };
+  mostrarProductos();
 }
