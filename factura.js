@@ -49,34 +49,73 @@ function buscarYAgregarProducto() {
 function agregarProductoAFactura(producto) {
   const tbody = document.querySelector("#tablaProductos tbody");
 
+  // Revisar si ya está en la factura
+  const filaExistente = Array.from(tbody.children).find(fila => fila.cells[0].textContent === producto.nombre);
+
+  if (filaExistente) {
+    const input = filaExistente.querySelector("input");
+    const nuevaCantidad = parseInt(input.value) + 1;
+
+    if (nuevaCantidad > producto.stock) {
+      alert(`No hay suficiente stock. Disponible: ${producto.stock}`);
+      return;
+    }
+
+    input.value = nuevaCantidad;
+    filaExistente.cells[3].textContent = (nuevaCantidad * producto.precio).toFixed(2);
+    actualizarTotalFactura();
+    return;
+  }
+
+  // Si no está aún, agregar nueva fila
   const fila = document.createElement("tr");
 
-  // Nombre del producto
   const tdNombre = document.createElement("td");
   tdNombre.textContent = producto.nombre;
 
-  // Precio (no editable)
   const tdPrecio = document.createElement("td");
   tdPrecio.textContent = producto.precio.toFixed(2);
 
-  // Cantidad (editable)
   const tdCantidad = document.createElement("td");
   const inputCantidad = document.createElement("input");
   inputCantidad.type = "number";
   inputCantidad.value = 1;
   inputCantidad.min = 1;
+  inputCantidad.max = producto.stock;
   tdCantidad.appendChild(inputCantidad);
 
-  // Total (calculado)
   const tdTotal = document.createElement("td");
   tdTotal.textContent = producto.precio.toFixed(2);
 
-  // Evento para recalcular total cuando cambie la cantidad
   inputCantidad.addEventListener("input", () => {
-    const nuevaCantidad = parseFloat(inputCantidad.value) || 0;
-    tdTotal.textContent = (nuevaCantidad * producto.precio).toFixed(2);
+    let cantidad = parseInt(inputCantidad.value);
+    if (cantidad > producto.stock) {
+      inputCantidad.value = producto.stock;
+      cantidad = producto.stock;
+      alert(`Stock máximo disponible: ${producto.stock}`);
+    }
+    tdTotal.textContent = (cantidad * producto.precio).toFixed(2);
     actualizarTotalFactura();
   });
+
+  const tdEliminar = document.createElement("td");
+  const btnEliminar = document.createElement("button");
+  btnEliminar.textContent = "✕";
+  btnEliminar.onclick = () => {
+    fila.remove();
+    actualizarTotalFactura();
+  };
+  tdEliminar.appendChild(btnEliminar);
+
+  fila.appendChild(tdNombre);
+  fila.appendChild(tdPrecio);
+  fila.appendChild(tdCantidad);
+  fila.appendChild(tdTotal);
+  fila.appendChild(tdEliminar);
+
+  tbody.appendChild(fila);
+  actualizarTotalFactura();
+}
 
   // Botón eliminar
   const tdEliminar = document.createElement("td");
