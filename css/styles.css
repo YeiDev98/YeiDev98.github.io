@@ -135,7 +135,8 @@ header {
 .hero {
   min-height: 100vh;
   background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.72)),
-              url('../img/fondo2.jpeg') center/cover no-repeat;
+              url('../img/fondo1.jpg') center/cover no-repeat;
+  background-position: 50% 20%;
   position: relative;
   display: flex;
   align-items: center;
