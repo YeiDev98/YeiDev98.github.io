@@ -92,26 +92,27 @@
 
 .btn-whatsapp-large {
   background: transparent !important;
-  color: white !important;
-  border: 1px solid white !important; /* Devuelve su borde blanco original */
-  font-weight: 700;
+  color: var(--gold-light) !important;
+  border: 1px solid rgba(201, 151, 58, 0.45) !important;
+  font-weight: 600;
+  font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20rem;
-  
-  margin: 0 auto;
-  
-  /* Tus correcciones de tamaño y forma */
-  padding: 8px 24px !important; /* Reducido el alto (padding y) para que no se vea gigante */
-  border-radius: 40px !important; /* Le quita lo "demasiado redondo" y lo deja semi-cuadrado elegante */
+  text-decoration: none !important;
+  width: 100%;
+  max-width: 290px;
+  padding: 12px 24px !important; 
+  border-radius: 50px !important; /* Cápsula perfecta */
   transition: var(--transition);
+  margin-top: 8px;
 }
 
 .btn-whatsapp-large:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(201, 151, 58, 0.08) !important;
   transform: translateY(-2px);
 }
+
 
 
 /* ===== MODAL SELECCIÓN DE HUÉSPEDES ===== */
